@@ -1,0 +1,14 @@
+function delete_events()
+{
+  var fromDate = new Date(2022,0,19,0,0,0); 
+  var toDate = new Date(2022,0,20,0,0,0); 
+  var calendarID = ''; 
+  var calendar = CalendarApp.getCalendarById(calendarID);
+  
+var events = calendar.getEvents(fromDate, toDate);
+    for(var i=0; i<events.length;i++){
+      var ev = events[i];
+      Logger.log(ev.getTitle());
+      ev.deleteEvent();
+  }
+}
