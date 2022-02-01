@@ -1,4 +1,4 @@
-// in appsscript.json
+// Change timezone in appsscript.json file
 
 {
   "timeZone": "Asia/Tokyo",
