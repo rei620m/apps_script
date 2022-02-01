@@ -1,3 +1,5 @@
+//Delete all day events in a given time period
+
 function delete_events()
 {
   var fromDate = new Date(2022,0,19,0,0,0); 
