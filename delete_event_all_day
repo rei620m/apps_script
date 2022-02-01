@@ -4,7 +4,7 @@ function delete_events()
 {
   var fromDate = new Date(2022,0,19,0,0,0); 
   var toDate = new Date(2022,0,20,0,0,0); 
-  var calendarID = ''; 
+  var calendarID = 'primary'; 
   var calendar = CalendarApp.getCalendarById(calendarID);
   
 var events = calendar.getEvents(fromDate, toDate);
