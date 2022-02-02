@@ -2,8 +2,8 @@
 
 function delete_events()
 {
-  var fromDate = new Date(2022,0,19,0,0,0); 
-  var toDate = new Date(2022,0,20,0,0,0); 
+  var fromDate = new Date(2022,0,19,0,0,0); // Inclusive 
+  var toDate = new Date(2022,0,20,0,0,0); // Exclusive
   var calendarID = 'primary'; 
   var calendar = CalendarApp.getCalendarById(calendarID);
   
