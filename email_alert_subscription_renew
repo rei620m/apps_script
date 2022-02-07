@@ -1,4 +1,4 @@
-// Receive email alert 3 days before subscription auto renewal 
+// Receive email alert 3 days before subscription auto renew
 
 function emailAlert() {
   
