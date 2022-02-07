@@ -2,20 +2,20 @@
 
 function emailAlert() {
   
-  // today's date information
+  // today's date
   var today = new Date();
   var todayMonth = today.getMonth() + 1;
   var todayDay = today.getDate();
   var todayYear = today.getFullYear();
 
-  // three days
+  // 3 days later
   var threeDaysFromToday = new Date();
   threeDaysFromToday.setDate(threeDaysFromToday.getDate() + 3);
   var threeDaysMonth = threeDaysFromToday.getMonth() + 1;
   var threeDaysDay = threeDaysFromToday.getDate();
   var threeDaysYear = threeDaysFromToday.getFullYear();
   
-  // getting data from spreadsheet
+  // get data from spreadsheet
   var sheet = SpreadsheetApp.getActiveSheet();
   var startRow = 2; // First row of data to process
   var numRows = 1; // Number of rows to process
@@ -23,7 +23,7 @@ function emailAlert() {
   var dataRange = sheet.getRange(startRow, 1, numRows, 999);
   var data = dataRange.getValues();
 
-  //looping through all of the rows
+  // loop through all of the rows
   for (var i=0; i<data.length; i++) {
     var row = data[i];
     
@@ -33,12 +33,12 @@ function emailAlert() {
       'yyyy/MM/dd'
     );
 
-  //next payment date information
+  // next payment date information
     var nextPaymentDateMonth = new Date(row[7]).getMonth() + 1;
     var nextPaymentDateDay = new Date(row[7]).getDate();
     var nextPaymentDateYear = new Date(row[7]).getFullYear();
 
-  //check for 3 days
+  // check for next payment due 3 days later
     if (
       nextPaymentDateMonth === threeDaysMonth &&
       nextPaymentDateDay === threeDaysDay &&
