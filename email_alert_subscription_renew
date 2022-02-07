@@ -1,3 +1,5 @@
+// Receive email alert 3 days before subscription auto renewal 
+
 function emailAlert() {
   
   // today's date information
