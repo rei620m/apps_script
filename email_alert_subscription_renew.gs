@@ -57,7 +57,7 @@ function emailAlert() {
       '\n' +
       ' Next Payment: ' +
       row[7];
-      MailApp.sendEmail('rei-morikawa@uwalumni.com', subject, message);
+      MailApp.sendEmail('youremail', subject, message);
     }
   } 
 }
