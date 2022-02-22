@@ -1,4 +1,4 @@
-//Delete all day events in a given time period
+// Delete all day events in a given time period
 
 function delete_events()
 {
