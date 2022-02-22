@@ -18,16 +18,16 @@ function emailAlert() {
   // getting data from spreadsheet
   var sheet = SpreadsheetApp.getActiveSheet();
   var startRow = 2; // First row of data to process
-  var numRows = 999; // Number of rows to process
+  var numRows = 100; // Number of rows to process
 
-  var dataRange = sheet.getRange(startRow, 1, numRows, 999);
+  var dataRange = sheet.getRange(startRow, 1, numRows, 9);
   var data = dataRange.getValues();
 
-  //looping through all of the rows
+  // loop through all rows
   for (var i=0; i<numRows; i++) {
     var row = data[i];
 
-  //next payment date information
+  // next payment date information
     var nextPaymentDateMonth = new Date(row[7]).getMonth() + 1;
     var nextPaymentDateDay = new Date(row[7]).getDate();
     var nextPaymentDateYear = new Date(row[7]).getFullYear();
