@@ -17,8 +17,8 @@ function emailAlert() {
   
   // getting data from spreadsheet
   var sheet = SpreadsheetApp.getActiveSheet();
-  var startRow = 2; // First row of data to process
-  var numRows = 100; // Number of rows to process
+  var startRow = 2; // first row of data to process
+  var numRows = 100; // number of rows to process
 
   var dataRange = sheet.getRange(startRow, 1, numRows, 9);
   var data = dataRange.getValues();
