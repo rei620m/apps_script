@@ -32,7 +32,7 @@ function emailAlert() {
     var nextPaymentDateDay = new Date(row[7]).getDate();
     var nextPaymentDateYear = new Date(row[7]).getFullYear();
 
-  //check for 3 days
+  // check for 3 days
     if (
       nextPaymentDateMonth === threeDaysMonth &&
       nextPaymentDateDay === threeDaysDay &&
