@@ -37,11 +37,11 @@ function sendEmail() {
       '\n' +
       'Please ignore this email if you have already sent the payment, and accept my gratitude.'+
       '\n\n' +
-      'If you have any questions, please reach out to myname at myemail'+
+      'If you have any questions, please reach out to me at myemail'+
       '\n\n' +
       'Many thanks,'+
       '\n' +
-      'Me';
+      'me';
       GmailApp.sendEmail(clientEmail, emailSubject, emailText, {
         cc: 'myemail'
       }
