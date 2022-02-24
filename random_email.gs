@@ -1,4 +1,4 @@
-// Share a random joke via email
+// Share a random joke from a list in google sheets, via email
 
 function randomJoke() {
 var t = SpreadsheetApp.getActive().getSheetByName('jokes').getRange('A:A').getValues().filter(String)
