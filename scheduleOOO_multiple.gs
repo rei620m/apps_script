@@ -14,7 +14,7 @@ function addToCalendar() {
       var changes = {
       transparency: "transparent"
       };
-  }
+    };
 
   function addToTeam() {
     var spreadsheet = SpreadsheetApp.getActiveSheet();
@@ -28,7 +28,7 @@ function addToCalendar() {
       var changes = {
       transparency: "transparent"
       };
-  }
+  };
 }
 
 function onOpen() {
