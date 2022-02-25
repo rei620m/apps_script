@@ -2,33 +2,23 @@
 
 function addToCalendar() {
   
-  function addToPersonal() {
-    var spreadsheet = SpreadsheetApp.getActiveSheet();
-    var sheet = SpreadsheetApp.getActive().getSheetByName('Sheet1'); 
-    var personalCal = CalendarApp.getCalendarById('primary');
+  var spreadsheet = SpreadsheetApp.getActiveSheet();
+  var sheet = SpreadsheetApp.getActive().getSheetByName('Sheet1'); 
+  var personalCal = CalendarApp.getCalendarById('primary');
+  var teamCal = CalendarApp.getCalendarById('abc@group.calendar.google.com');
 
-    var oooTracker = sheet.getRange(sheet.getLastRow(),1,1,3).getValues();
-    var startDate = oooTracker[0][0]; 
+  var oooTracker = sheet.getRange(sheet.getLastRow(),1,1,3).getValues();
+  var startDate = oooTracker[0][0]; 
     
-    personalCal.createAllDayEvent('Rei OOO', startDate);
-      var changes = {
-      transparency: "transparent"
-      };
+  personalCal.createAllDayEvent('Rei OOO', startDate);
+    var changes = {
+    transparency: "transparent"
     };
 
-  function addToTeam() {
-    var spreadsheet = SpreadsheetApp.getActiveSheet();
-    var sheet = SpreadsheetApp.getActive().getSheetByName('Sheet1'); 
-    var teamCal = CalendarApp.getCalendarById('xyz@gmail.com');
-    
-    var oooTracker = sheet.getRange(sheet.getLastRow(),1,1,3).getValues();
-    var startDate = oooTracker[0][0];
-
-    teamCal.createAllDayEvent('Rei OOO', startDate);
-      var changes = {
-      transparency: "transparent"
-      };
-  };
+  teamCal.createAllDayEvent('Rei OOO', startDate);
+    var changes = {
+    transparency: "transparent"
+   };
 }
 
 function onOpen() {
