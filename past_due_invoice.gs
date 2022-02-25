@@ -49,3 +49,15 @@ function sendEmail() {
     }
   }
 }
+
+// run every weekday at 11am
+function createTriggers() {
+   var days = [ScriptApp.WeekDay.MONDAY, ScriptApp.WeekDay.TUESDAY,
+               ScriptApp.WeekDay.WEDNESDAY, ScriptApp.WeekDay.THURSDAY,                                            
+               ScriptApp.WeekDay.FRIDAY];
+   for (var i=0; i<days.length; i++) {
+      ScriptApp.newTrigger("sendEmail")
+               .timeBased().onWeekDay(days[i])
+               .atHour(11).create();
+   }
+}
