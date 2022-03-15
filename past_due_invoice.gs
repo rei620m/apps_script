@@ -35,7 +35,7 @@ function sendEmail() {
       'This is an automated reminder that your invoice #' + invoiceNo +
       ' for $' + invoiceUsd + ' USD is past due.' +
       '\n' +
-      'Please ignore this email if you have already sent the payment, and accept my gratitude.'+
+      'Please disregard this email if you have already sent the payment, and accept my gratitude.'+
       '\n\n' +
       'If you have any questions, please reach out to me at myemail'+
       '\n\n' +
