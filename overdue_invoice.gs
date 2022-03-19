@@ -1,4 +1,4 @@
-// Automated email reminder to clients for past due invoice
+// Automated email reminder from alias
 
 function sendEmail() {
   var sheet = SpreadsheetApp.getActiveSheet();
@@ -21,10 +21,12 @@ function sendEmail() {
   if (invoiceDueDate < today &&
       invoiceStatus === "Unpaid"
   ) {
+      var me = Session.getActiveUser().getEmail();
+      var invoiceAlias = GmailApp.getAliases();
       var clientEmail = row[6];
 
       var invoiceNo = row[2];
-      var emailSubject = 'Past Due Invoice #' + invoiceNo;
+      var emailSubject = '[ACTION REQUIRED] OVERDUE INVOICE #' + invoiceNo;
 
       var firstName = row[4];
       var invoiceUsd = row[3];
@@ -43,6 +45,7 @@ function sendEmail() {
       '\n' +
       'me';
       GmailApp.sendEmail(clientEmail, emailSubject, emailText, {
+        from: invoiceAlias[0],
         cc: 'myemail'
       }
       );
