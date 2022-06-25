@@ -1,6 +1,7 @@
-// Automated email reminder from alias
+// Email reminder from alias 
 
-function sendEmail() {
+function sendEmails() {
+ 
   var sheet = SpreadsheetApp.getActiveSheet();
   var startRow = 2; // First row of data to process
   var numRows = 999; // Number of rows to process
@@ -12,45 +13,74 @@ function sendEmail() {
   for (var i=0; i<numRows; i++) {
     var row = data[i];
 
-  // past due invoice information
+  // get invoice information
   var today = new Date();
   var invoiceDueDate = row[1]; 
-  var invoiceStatus = row[8];
+  var invoiceReminderDate = row[2];
+  var invoiceStatus = row[9];
 
-  // check for past due invoice
+  // send email for past due invoice
   if (invoiceDueDate < today &&
       invoiceStatus === "Unpaid"
   ) {
       var me = Session.getActiveUser().getEmail();
       var invoiceAlias = GmailApp.getAliases();
-      var clientEmail = row[6];
+      var clientEmail = row[7];
 
-      var invoiceNo = row[2];
+      var invoiceNo = row[3];
       var emailSubject = '[ACTION REQUIRED] OVERDUE INVOICE #' + invoiceNo;
 
-      var firstName = row[4];
-      var invoiceUsd = row[3];
+      var firstName = row[5];
+      var invoiceUsd = row[4];
 
       var emailText =
       'Hello ' + firstName + ', ' +
       '\n\n' +
       'This is an automated reminder that your invoice #' + invoiceNo +
       ' for $' + invoiceUsd + ' USD is past due.' +
-      '\n' +
+      '\n\n' +
       'Please disregard this email if you have already sent the payment, and accept my gratitude.'+
-      '\n\n' +
-      'If you have any questions, please reach out to me at myemail'+
-      '\n\n' +
-      'Many thanks,'+
       '\n' +
-      'me';
+      'If you have any questions, please reach out to me at myemail'; //update
+
       GmailApp.sendEmail(clientEmail, emailSubject, emailText, {
         from: invoiceAlias[0],
-        cc: 'myemail'
+        cc: 'myemail' //update
+      }
+      );
+    };
+
+  // send reminder for past due invoice
+  if (invoiceReminderDate = today &&
+      invoiceStatus === "Unpaid"
+  ) {
+      var me = Session.getActiveUser().getEmail();
+      var invoiceAlias = GmailApp.getAliases();
+      var clientEmail = row[7];
+
+      var invoiceNo = row[3];
+      var emailSubject = '[Reminder] Invoice #' + invoiceNo;
+
+      var firstName = row[5];
+      var invoiceUsd = row[4];
+
+      var emailText =
+      'Hello ' + firstName + ', ' +
+      '\n\n' +
+      'This is an automated reminder that your invoice #' + invoiceNo +
+      ' for $' + invoiceUsd + ' USD will be due on ' + invoiceDueDate +
+      '\n\n' +
+      'Please disregard this email if you have already sent the payment, and accept my gratitude.'+
+      '\n' +
+      'If you have any questions, please reach out to me at myemail'; //update
+
+      GmailApp.sendEmail(clientEmail, emailSubject, emailText, {
+        from: invoiceAlias[0],
+        cc: 'myemail' //update
       }
       );
     }
-  }
+    }
 }
 
 // run every weekday at 11am
