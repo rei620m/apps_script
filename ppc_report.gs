@@ -1,3 +1,5 @@
+// Automate weekly PPC report with apps script for slides
+
 var NARRATIVE_SHEETS_URL = 'https://docs.google.com/spreadsheets/d/1lX3klfgnfpnwrfQG4hVYwbqUFqlTrCR_-gYM7c4Cecs/'
 var SHEET_NAME = 'automation';
 
