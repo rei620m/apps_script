@@ -1,6 +1,6 @@
 // Email reminder from alias 
 
-function sendEmails() {
+function sendEmail() {
  
   var sheet = SpreadsheetApp.getActiveSheet();
   var startRow = 2; // First row of data to process
