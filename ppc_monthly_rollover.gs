@@ -13,7 +13,7 @@ function onOpen() {
 
 function monthlyRollover() { 
   const ss = SpreadsheetApp.getActiveSpreadsheet();
-  var ws1 = ss.getSheetByName("Fitness - GAds search");
+  var ws1 = ss.getSheetByName("Account 1");
 
   var oldMonth = ws1.getRange(6,1).getValue();
 
@@ -36,7 +36,7 @@ function monthlyRollover() {
     contentsOnly: true };
    range1.clear(options);
 
-  var ws2 = ss.getSheetByName("Fitness - GAds Display");
+  var ws2 = ss.getSheetByName("Account 2");
   var currentClicks2 = ws2.getRange(6,2).getValue();
   var currentImps2 = ws2.getRange(6,3).getValue();
   var currentCtr2 = ws2.getRange(6,4).getValue();
