@@ -1,4 +1,4 @@
-// Pull previous month's deliveroo ereceipts into my personal finances sheet
+// Pull last month's deliveroo ereceipts into my personal finances sheet
 
 function getDeliverooEreceipt(senderEmail, subjectPrefix) {
   var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
@@ -10,11 +10,15 @@ function getDeliverooEreceipt(senderEmail, subjectPrefix) {
   var messages = GmailApp.getMessagesForThreads(threads);
 
   // Prepare overwrite
-  var range = sheet.getDataRange();
-  var numRows = range.getNumRows();
+  var numRows = sheet.getLastRow();
+  var numColumns = 5;
   if (numRows > 1) {
-    sheet.deleteRows(2, numRows - 1);
+    var range = sheet.getRange(2, 1, numRows - 1, numColumns);
+    range.clearContent();
   }
+
+  // Get the existing formula in column F
+  var existingFormulas = sheet.getRange(2, 6, numRows - 1, 1).getFormulas();
 
   // Process the retrieved emails
   for (var i = 0; i < messages.length; i++) {
@@ -28,23 +32,41 @@ function getDeliverooEreceipt(senderEmail, subjectPrefix) {
     var memo = "";
     var restaurant = getRestaurantName(body); 
     var row = [formattedDate, category, memo, formattedTotal, restaurant]; 
-    sheet.appendRow(row);
+    var rowIndex = i + 2; // Adjust the row index for writing data
+    
+    // Overwrite columns A to E
+    sheet.getRange(rowIndex, 1, 1, 5).setValues([row]);
+    
+    // Restore existing formula in column F
+    var formula = existingFormulas[i][0];
+    sheet.getRange(rowIndex, 6).setFormula(formula);
   }
 }
 
 function getTotal(body) {
-  var regex = /(\$[\d.]+)/;
+  var regex = /Total\s+\$([\d.]+)/;
   var match = body.match(regex);
   if (match && match[1]) {
-    return match[1];
+    var total = match[1];
+    if (!isNaN(parseFloat(total))) {
+      return total;
+    }
   } else {
-    return "N/A";
+    var singleDollarRegex = /\$([\d.]+)/;
+    var singleDollarMatch = body.match(singleDollarRegex);
+    if (singleDollarMatch && singleDollarMatch[1]) {
+      var total = singleDollarMatch[1];
+      if (!isNaN(parseFloat(total))) {
+        return total;
+      }
+    }
   }
+  return "N/A";
 }
 
 function formatCurrency(total) {
   var numericTotal = Number(total.replace(/[^0-9.-]+/g, "")); // Remove any non-numeric characters
-  var formattedTotal = "$" + numericTotal.toFixed(0); // Format with leading dollar sign and no decimals
+  var formattedTotal = "$" + numericTotal.toFixed(0); // Format with no decimals and leading dollar sign
   return formattedTotal;
 }
 
