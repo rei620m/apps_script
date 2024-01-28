@@ -1,0 +1,84 @@
+// Pull previous month's deliveroo ereceipts into my personal finances sheet
+
+function getDeliverooEreceipt(senderEmail, subjectPrefix) {
+  var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = spreadsheet.getSheetByName("deliveroo");
+  var senderEmail = "noreply_at_t_deliveroo_com_abc123@privaterelay.appleid.com"; // Update
+  var subjectPrefix = "Your order's in the kitchen";
+
+  var threads = GmailApp.search('from:' + senderEmail + ' subject:' + subjectPrefix + ' after:' + getFirstDayOfPreviousMonth() + ' before:' + getLastDayOfPreviousMonth());
+  var messages = GmailApp.getMessagesForThreads(threads);
+
+  // Prepare overwrite
+  var range = sheet.getDataRange();
+  var numRows = range.getNumRows();
+  if (numRows > 1) {
+    sheet.deleteRows(2, numRows - 1);
+  }
+
+  // Process the retrieved emails
+  for (var i = 0; i < messages.length; i++) {
+    var email = messages[i][0];
+    var date = email.getDate();
+    var formattedDate = formatDate(date);
+    var body = email.getPlainBody();
+    var total = getTotal(body)
+    var formattedTotal = formatCurrency(total)
+    var category = "deliveroo";
+    var memo = "";
+    var restaurant = getRestaurantName(body); 
+    var row = [formattedDate, category, memo, formattedTotal, restaurant]; 
+    sheet.appendRow(row);
+  }
+}
+
+function getTotal(body) {
+  var regex = /(\$[\d.]+)/;
+  var match = body.match(regex);
+  if (match && match[1]) {
+    return match[1];
+  } else {
+    return "N/A";
+  }
+}
+
+function formatCurrency(total) {
+  var numericTotal = Number(total.replace(/[^0-9.-]+/g, "")); // Remove any non-numeric characters
+  var formattedTotal = "$" + numericTotal.toFixed(0); // Format with leading dollar sign and no decimals
+  return formattedTotal;
+}
+
+function getRestaurantName(body) {
+  var keyword = " has your order!";
+  var startIndex = body.indexOf(keyword);
+  if (startIndex !== -1) {
+    var restaurantName = body.substring(0, startIndex);
+    restaurantName = restaurantName.trim(); // Remove leading/trailing spaces
+    restaurantName = restaurantName.replace(/[\r\n]+/g, ""); // Remove line breaks
+    return restaurantName;
+  } else {
+    return "N/A";
+  }
+}
+
+// Date helper functions
+function formatDate(date) {
+  var year = date.getFullYear();
+  var month = ("0" + (date.getMonth() + 1)).slice(-2);
+  var day = ("0" + date.getDate()).slice(-2);
+  return year + "-" + month + "-" + day;
+}
+
+function getFirstDayOfPreviousMonth() {
+  var today = new Date();
+  var firstDayOfThisMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+  var firstDayOfPreviousMonth = new Date(firstDayOfThisMonth.getFullYear(), firstDayOfThisMonth.getMonth() - 1, 1);
+  return formatDate(firstDayOfPreviousMonth);
+}
+
+function getLastDayOfPreviousMonth() {
+  var today = new Date();
+  var firstDayOfThisMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+  var lastDayOfPreviousMonth = new Date(firstDayOfThisMonth.getFullYear(), firstDayOfThisMonth.getMonth(), 0);
+  return formatDate(lastDayOfPreviousMonth);
+}
