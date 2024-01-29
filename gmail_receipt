@@ -1,6 +1,6 @@
-// Pull last month's deliveroo ereceipts into my personal finances sheet
+// Pull last month's gmail receipts into my personal finances sheet
 
-function getDeliverooEreceipt(senderEmail, subjectPrefix) {
+function getDeliverooReceipt(senderEmail, subjectPrefix) {
   var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
   var sheet = spreadsheet.getSheetByName("deliveroo");
   var senderEmail = "noreply_at_t_deliveroo_com_abc123@privaterelay.appleid.com"; // Update
@@ -26,7 +26,7 @@ function getDeliverooEreceipt(senderEmail, subjectPrefix) {
     var date = email.getDate();
     var formattedDate = formatDate(date);
     var body = email.getPlainBody();
-    var total = getTotal(body)
+    var total = getDeliverooTotal(body)
     var formattedTotal = formatCurrency(total)
     var category = "deliveroo";
     var memo = "";
@@ -43,7 +43,7 @@ function getDeliverooEreceipt(senderEmail, subjectPrefix) {
   }
 }
 
-function getTotal(body) {
+function getDeliverooTotal(body) {
   var regex = /Total\s+\$([\d.]+)/;
   var match = body.match(regex);
   if (match && match[1]) {
@@ -61,6 +61,60 @@ function getTotal(body) {
       }
     }
   }
+  return "N/A";
+}
+
+function getPaymeEmail(senderEmail) {
+  var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = spreadsheet.getSheetByName("payme");
+  var senderEmail = "no-reply@secure-app.payme.hsbc.com.hk";
+
+  var threads = GmailApp.search('from:' + senderEmail + ' after:' + getFirstDayOfPreviousMonth() + ' before:' + getLastDayOfPreviousMonth() + ' subject:paid');
+  var messages = GmailApp.getMessagesForThreads(threads);
+
+  // Prepare overwrite
+  var numRows = sheet.getLastRow();
+  var numColumns = 5;
+  if (numRows > 1) {
+    var range = sheet.getRange(2, 1, numRows - 1, numColumns);
+    range.clearContent();
+  }
+
+  // Get the existing formula in column F
+  var existingFormulas = sheet.getRange(2, 6, numRows - 1, 1).getFormulas();
+
+  // Process the retrieved emails
+  for (var i = 0; i < messages.length; i++) {
+    var email = messages[i][0];
+    var date = email.getDate();
+    var subject = email.getSubject();
+    var formattedDate = formatDate(date);
+    var body = email.getPlainBody();
+    var total = getPaymeTotal(body)
+    var formattedTotal = formatCurrency(total)
+    var category = "payme";
+    var memo = "";
+    var row = [formattedDate, category, memo, formattedTotal, subject]; 
+    var rowIndex = i + 2; // Adjust the row index for writing data
+    
+    // Overwrite columns A to E
+    sheet.getRange(rowIndex, 1, 1, 5).setValues([row]);
+    
+    // Restore existing formula in column F
+    var formula = existingFormulas[i][0];
+    sheet.getRange(rowIndex, 6).setFormula(formula);
+  }
+}
+
+function getPaymeTotal(body) {
+  var regex = /HKD\s*([^\n<]+)/;
+  var match = body.match(regex);
+  
+  if (match && match[1]) {
+    var amount = match[1];
+    return amount.trim();
+  }
+
   return "N/A";
 }
 
