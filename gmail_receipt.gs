@@ -3,7 +3,7 @@
 function getDeliverooReceipt(senderEmail, subjectPrefix) {
   var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
   var sheet = spreadsheet.getSheetByName("deliveroo");
-  var senderEmail = "noreply_at_t_deliveroo_com_abc123@privaterelay.appleid.com"; // Update
+  var senderEmail = "noreply_at_t_deliveroo_com_vqjmgh4zvk_131a2236@privaterelay.appleid.com";
   var subjectPrefix = "Your order's in the kitchen";
 
   var threads = GmailApp.search('from:' + senderEmail + ' subject:' + subjectPrefix + ' after:' + getFirstDayOfPreviousMonth() + ' before:' + getLastDayOfPreviousMonth());
@@ -23,12 +23,15 @@ function getDeliverooReceipt(senderEmail, subjectPrefix) {
   // Process the retrieved emails
   for (var i = 0; i < messages.length; i++) {
     var email = messages[i][0];
-    var date = email.getDate();
-    var formattedDate = formatDate(date);
+    var rawContent = email.getRawContent();
+    var dateRegex = /Date: (.*?)(\r?\n)/;
+    var dateString = rawContent.match(dateRegex)[1];
+    var date = new Date(dateString);
+    var formattedDate = Utilities.formatDate(date, Session.getScriptTimeZone(), 'yyyy/MM/dd');
     var body = email.getPlainBody();
     var total = getDeliverooTotal(body)
     var formattedTotal = formatCurrency(total)
-    var category = "deliveroo";
+    var category = "外食";
     var memo = "";
     var restaurant = getRestaurantName(body); 
     var row = [formattedDate, category, memo, formattedTotal, restaurant]; 
@@ -40,6 +43,9 @@ function getDeliverooReceipt(senderEmail, subjectPrefix) {
     // Restore existing formula in column F
     var formula = existingFormulas[i][0];
     sheet.getRange(rowIndex, 6).setFormula(formula);
+
+    var range = sheet.getRange("A2:A20");
+    range.setNumberFormat("yyyy/MM/dd");
   }
 }
 
@@ -86,13 +92,16 @@ function getPaymeEmail(senderEmail) {
   // Process the retrieved emails
   for (var i = 0; i < messages.length; i++) {
     var email = messages[i][0];
-    var date = email.getDate();
+    var rawContent = email.getRawContent();
+    var dateRegex = /Date: (.*?)(\r?\n)/;
+    var dateString = rawContent.match(dateRegex)[1];
+    var date = new Date(dateString);
+      var formattedDate = Utilities.formatDate(date, Session.getScriptTimeZone(), 'yyyy/MM/dd');
     var subject = email.getSubject();
-    var formattedDate = formatDate(date);
     var body = email.getPlainBody();
     var total = getPaymeTotal(body)
     var formattedTotal = formatCurrency(total)
-    var category = "payme";
+    var category = "外食";
     var memo = "";
     var row = [formattedDate, category, memo, formattedTotal, subject]; 
     var rowIndex = i + 2; // Adjust the row index for writing data
@@ -103,6 +112,9 @@ function getPaymeEmail(senderEmail) {
     // Restore existing formula in column F
     var formula = existingFormulas[i][0];
     sheet.getRange(rowIndex, 6).setFormula(formula);
+
+    var range = sheet.getRange("A2:A20");
+    range.setNumberFormat("yyyy/MM/dd");
   }
 }
 
@@ -157,4 +169,8 @@ function getLastDayOfPreviousMonth() {
   var firstDayOfThisMonth = new Date(today.getFullYear(), today.getMonth(), 1);
   var lastDayOfPreviousMonth = new Date(firstDayOfThisMonth.getFullYear(), firstDayOfThisMonth.getMonth(), 0);
   return formatDate(lastDayOfPreviousMonth);
+}
+
+function padZero(number) {
+  return number < 10 ? '0' + number : number;
 }
