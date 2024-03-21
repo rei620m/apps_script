@@ -58,7 +58,6 @@ if (responseCodes.length > 0) {
           var url = urls[k];
           var responseCode = getResponseCode(url);
 
-          // Remove the random quotation mark if present
           var cleanUrl = url.replace(/"$/, "");
 
           // Add broken links to the summary
