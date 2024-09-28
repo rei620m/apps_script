@@ -1,4 +1,4 @@
-// Pull last month's gmail receipts into my personal finances sheet
+// Pull last month's gmail receipts into google sheets
 
 function getDeliverooReceipt(senderEmail, subjectPrefix) {
   var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
